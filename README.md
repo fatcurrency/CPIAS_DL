@@ -12,12 +12,12 @@ CPIAS_DL是一个用于PET心肌图像分析的项目，包括基本的可视化
 
 ### PET心肌图像可视化
 
-![PET心肌图像可视化](resource\image\CPIAS_NIFTI_PET_heart_visualization.gif)
+![CT全身图像可视化](./resource/image/CPIAS_NIFTI_PET_heart_visualization.gif)
 
 在这个示例中，我们展示了如何使用我们的工具来可视化PET心肌图像。
 
 ### CT全身图像可视化
 
-![CT全身图像可视化](resource\image\CPIAS_NIFTI_CT_wholebody_visualization.gif)
+![CT全身图像可视化](./resource/image/CPIAS_NIFTI_CT_wholebody_visualization.gif)
 
 在这个示例中，我们展示了如何使用我们的工具来可视化CT全身图像。
