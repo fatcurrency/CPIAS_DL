@@ -130,6 +130,10 @@ public:
     static int findIndexIfPresent(const std::vector<double>& container, double value);
 
     static std::vector<cv::Mat> GetSlices(vtkSmartPointer<vtkImageData> image, int axis);
+
+    // 对image只保留mask中值为value的区域,其它设置为0，返回一个新的image
+    static vtkSmartPointer<vtkImageData> fuseOriginalImageByMask(vtkSmartPointer<vtkImageData> image, vtkSmartPointer<vtkImageData> mask, int value);
+
 };
 
 #endif // IMAGEPROCESSINGBOX_H

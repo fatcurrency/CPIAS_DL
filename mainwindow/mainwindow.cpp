@@ -24,7 +24,14 @@ MainWindow::MainWindow(QWidget *parent) :
     this->segmentationLayout->addWidget(this->segmentationView);
     this->segmentationLayout->setMargin(0);
 
+    this->volumeLayout = new QVBoxLayout(ui->tab_3);
+    this->volumeView = new VolumeViewVisualization(ui->tab_3);
+    this->volumeLayout->addWidget(this->volumeView);
+    this->volumeLayout->setMargin(0);
+
+    // 将this->sliceView加载的图像同步到this->segmentationView作为mask 轮廓的背景显示
     connect(this->sliceView, &SingleViewSliceVisualization::sendOriginalImageToSegmentation, this->segmentationView, &SegmentationVisualization::setSliceviewVtkOriginImage);
+    connect(this->segmentationView, &SegmentationVisualization::sendFusionImageToVolumeView, this->volumeView, &VolumeViewVisualization::setThreeDImage);
 }
 
 MainWindow::~MainWindow()
@@ -33,5 +40,7 @@ MainWindow::~MainWindow()
     delete this->sliceLayout;
     delete this->segmentationView;
     delete this->segmentationLayout;
+    delete this->volumeView;
+    delete this->volumeLayout;
     delete ui;
 }

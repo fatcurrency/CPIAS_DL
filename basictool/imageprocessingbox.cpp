@@ -712,3 +712,31 @@ std::vector<cv::Mat> ImageProcessing::GetSlices(vtkSmartPointer<vtkImageData> im
 
     return mats2D;
 }
+
+vtkSmartPointer<vtkImageData> ImageProcessing::fuseOriginalImageByMask(vtkSmartPointer<vtkImageData> image, vtkSmartPointer<vtkImageData> mask, int value){
+    // 创建一个新的图像，用于存储结果
+    vtkSmartPointer<vtkImageData> result = vtkSmartPointer<vtkImageData>::New();
+    result->DeepCopy(image);
+    // 获取图像的维度
+    int* dims = image->GetDimensions();
+    // 获取图像和掩码的数据
+    float* imageData = static_cast<float*>(result->GetScalarPointer());
+    unsigned int* maskData = static_cast<unsigned int*>(mask->GetScalarPointer());
+
+    // 遍历图像的所有像素
+    for (int z = 0; z < dims[2]; z++){
+        for (int y = 0; y < dims[1]; y++){
+            for (int x = 0; x < dims[0]; x++){
+                // 获取当前像素的索引
+                int index = x + y * dims[0] + z * dims[0] * dims[1];
+                // 如果掩码的像素值等于value，保留图像的像素值，否则设置为0
+                if (maskData[index] == value){
+                    imageData[index] = round(imageData[index]);
+                }else{
+                    imageData[index] = 0;
+                }
+            }
+        }
+    }
+    return result;
+}

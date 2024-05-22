@@ -46,24 +46,29 @@ SET( PROJECT_SRCS
     mainwindow/mainwindow.cpp
     view/singleviewslicevisualization.cpp
     view/segmentationvisualization.cpp
+    view/volumeviewvisualization.cpp
 
     basictool/imageloadingbox.cpp
     basictool/imageprocessingbox.cpp
+    basictool/colormapTableBox.cpp
     )
 
 SET( PROJECT_MOC_HDRS
     mainwindow/mainwindow.h
     view/singleviewslicevisualization.h
     view/segmentationvisualization.h
+    view/volumeviewvisualization.h
 
     basictool/imageloadingbox.h
     basictool/imageprocessingbox.h
+    basictool/colormapTableBox.h
 )
 
 SET( PROJECT_UIS
     mainwindow/mainwindow.ui
     view/singleviewslicevisualization.ui
     view/segmentationvisualization.ui
+    view/volumeviewvisualization.ui
 )
 
 QT5_WRAP_UI( PROJECT_UIS_H

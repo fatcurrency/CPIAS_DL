@@ -31,6 +31,7 @@ SegmentationVisualization::SegmentationVisualization(QWidget *parent) :
 
     this->vtkMaskImage = vtkSmartPointer<vtkImageData>::New();
     this->sliceviewVtkOriginImage = vtkSmartPointer<vtkImageData>::New();
+    this->vtkFusionImage = vtkSmartPointer<vtkImageData>::New();
     this->rendererViewer->SetInputData(this->sliceviewVtkOriginImage);
     this->openGLView->SetRenderWindow(this->renderWindow);
 
@@ -52,6 +53,7 @@ SegmentationVisualization::~SegmentationVisualization()
     delete ui;
 }
 
+// 根据一系列的离散点，绘制轮廓线，首尾相连
 vtkSmartPointer<vtkActor> SegmentationVisualization::addCurveToRenderer(vtkRenderer* curveRenderer, std::vector<std::vector<double>>& pointsData) {
     vtkSmartPointer<vtkPolyData> curve = vtkSmartPointer<vtkPolyData>::New();
     vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
@@ -82,6 +84,7 @@ vtkSmartPointer<vtkActor> SegmentationVisualization::addCurveToRenderer(vtkRende
     return curveActor;
 }
 
+// 绘制所有的轮廓
 void SegmentationVisualization::drawCurrentSliceContourLine(){
     if (this->maskSliceMat.empty()) {
         std::cout << "The mask image is empty" << std::endl;
@@ -144,6 +147,7 @@ void SegmentationVisualization::drawCurrentSliceContourLine(){
     this->openGLView->show();
 }
 
+// 鼠标拖拽事件
 void SegmentationVisualization::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasUrls()) { // 如果拖拽的数据包含URL（文件路径）
@@ -151,6 +155,7 @@ void SegmentationVisualization::dragEnterEvent(QDragEnterEvent *event)
     }
 }
 
+// 拖拽文件复制到该窗口中，识别文件路径
 void SegmentationVisualization::dropEvent(QDropEvent *event)
 {
     foreach (const QUrl &url, event->mimeData()->urls()) {
@@ -197,6 +202,12 @@ void SegmentationVisualization::dropEvent(QDropEvent *event)
                 return;
             }
 
+            // 图像融合，只保留mask中的像素值
+            this->vtkFusionImage->DeepCopy(ImageProcessing::fuseOriginalImageByMask(this->sliceviewVtkOriginImage,this->vtkMaskImage,1));
+            this->vtkFusionImage->Modified();
+            SingleViewSliceVisualization::getImageInfo(this->vtkFusionImage);
+            emit sendFusionImageToVolumeView(this->vtkFusionImage);
+
             if (this->sliceviewVtkOriginImage->GetScalarType() != -1){
                 int index = ui->viewDirectionComboBox->currentIndex();
                 ui->horizontalSlider->setRange(0,this->sliceviewVtkOriginImageInfo.dimensions[index]-1);
@@ -215,6 +226,7 @@ void SegmentationVisualization::dropEvent(QDropEvent *event)
     }
 }
 
+// 槽函数，同步接受slice_view加载得到的图像，作为mask轮廓的背景图像
 void SegmentationVisualization::setSliceviewVtkOriginImage(vtkSmartPointer<vtkImageData> image){
     std::cout << "setSliceviewVtkOriginImage" << std::endl;
     this->sliceviewVtkOriginImage->DeepCopy(image);
@@ -249,6 +261,7 @@ void SegmentationVisualization::OnCameraModified() {
 //    std::cout << "OnCameraModified" << std::endl;
 }
 
+// 切换不同的切片 Slice
 void SegmentationVisualization::on_horizontalSlider_valueChanged(int value)
 {
     this->rendererViewer->SetSlice(value);
@@ -256,6 +269,7 @@ void SegmentationVisualization::on_horizontalSlider_valueChanged(int value)
     this->drawCurrentSliceContourLine();
 }
 
+// 切换不同的轴向 Orientation
 void SegmentationVisualization::on_viewDirectionComboBox_currentIndexChanged(int index)
 {
     this->rendererViewer->SetSliceOrientation(index);

@@ -6,6 +6,7 @@
 
 #include "view/singleviewslicevisualization.h"
 #include "view/segmentationvisualization.h"
+#include "view/volumeviewvisualization.h"
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +30,9 @@ private:
     // Segmentation
     QVBoxLayout *segmentationLayout;
     SegmentationVisualization *segmentationView;
+    // Volume Render
+    QVBoxLayout *volumeLayout;
+    VolumeViewVisualization *volumeView;
 };
 
 #endif // MAINWINDOW_H

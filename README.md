@@ -25,6 +25,6 @@ CPIAS_DL是一个用于PET心肌图像分析的项目，包括基本的可视化
 
 ### PET心肌图像分割可视化
 
-![PET心肌图像分割可视化](./resource/image/CPIAS_NIFTI_Mask_visualization.gif)
+![PET心肌图像分割可视化](./resource/image/CPIAS_NIFTI_cardiac_pet_mask_visualization.gif)
 
 在这个示例中，我们展示了如何使用我们的工具，对PET心肌图像结合心肌分割的mask进行可视化。

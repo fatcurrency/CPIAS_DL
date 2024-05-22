@@ -47,6 +47,9 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 
+signals:
+    void sendFusionImageToVolumeView(vtkSmartPointer<vtkImageData> image);
+
 public slots:
     void setSliceviewVtkOriginImage(vtkSmartPointer<vtkImageData> image);
     void OnCameraModified();
@@ -69,6 +72,7 @@ private:
     ImageInfo sliceviewVtkOriginImageInfo;
     vtkSmartPointer<vtkImageData> vtkMaskImage;
     ImageInfo vtkMaskImageInfo;
+    vtkSmartPointer<vtkImageData> vtkFusionImage;
 
     vtkSmartPointer<vtkEventQtSlotConnect> connections;
 
