@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 
 #include "view/singleviewslicevisualization.h"
+#include "view/segmentationvisualization.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,9 @@ private:
     // 2D Slice
     QVBoxLayout *sliceLayout;
     SingleViewSliceVisualization *sliceView;
+    // Segmentation
+    QVBoxLayout *segmentationLayout;
+    SegmentationVisualization *segmentationView;
 };
 
 #endif // MAINWINDOW_H

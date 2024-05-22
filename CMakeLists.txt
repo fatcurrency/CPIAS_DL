@@ -45,6 +45,7 @@ SET( PROJECT_SRCS
     main.cpp
     mainwindow/mainwindow.cpp
     view/singleviewslicevisualization.cpp
+    view/segmentationvisualization.cpp
 
     basictool/imageloadingbox.cpp
     basictool/imageprocessingbox.cpp
@@ -53,6 +54,7 @@ SET( PROJECT_SRCS
 SET( PROJECT_MOC_HDRS
     mainwindow/mainwindow.h
     view/singleviewslicevisualization.h
+    view/segmentationvisualization.h
 
     basictool/imageloadingbox.h
     basictool/imageprocessingbox.h
@@ -61,6 +63,7 @@ SET( PROJECT_MOC_HDRS
 SET( PROJECT_UIS
     mainwindow/mainwindow.ui
     view/singleviewslicevisualization.ui
+    view/segmentationvisualization.ui
 )
 
 QT5_WRAP_UI( PROJECT_UIS_H

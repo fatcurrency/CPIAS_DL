@@ -21,6 +21,8 @@ struct ImageInfo
 {
     int dimensions[3]; // 图像的维度
     double spacing[3]; // 像素间距
+    double origin[3]; // 图像原点
+    double center[3]; // 图像中心点
     int dataType; // 像素数据类型
     double minValue; // 数据最小值
     double maxValue; // 数据最大值
@@ -37,15 +39,17 @@ class SingleViewSliceVisualization : public QWidget
 public:
     explicit SingleViewSliceVisualization(QWidget *parent = 0);
     ~SingleViewSliceVisualization();
-    ImageInfo getImageInfo(vtkSmartPointer<vtkImageData> image);
+    static ImageInfo getImageInfo(vtkSmartPointer<vtkImageData> image);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 
+signals:
+    void sendOriginalImageToSegmentation(vtkSmartPointer<vtkImageData> image);
+
 private slots:
     void on_horizontalSlider_valueChanged(int value);
-
     void on_viewDirectionComboBox_currentIndexChanged(int index);
 
 private:

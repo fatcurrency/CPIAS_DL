@@ -43,6 +43,8 @@ ImageInfo SingleViewSliceVisualization::getImageInfo(vtkSmartPointer<vtkImageDat
     ImageInfo info;
     image->GetDimensions(info.dimensions);
     image->GetSpacing(info.spacing);
+    image->GetOrigin(info.origin);
+    image->GetCenter(info.center);
     double range[2];
     image->GetScalarRange(range);
     info.minValue = range[0];
@@ -52,6 +54,8 @@ ImageInfo SingleViewSliceVisualization::getImageInfo(vtkSmartPointer<vtkImageDat
     // 输出图像信息
     qDebug() << "Image dimensions: " << info.dimensions[0] << "x" << info.dimensions[1] << "x" << info.dimensions[2];
     qDebug() << "Image spacing: " << info.spacing[0] << "x" << info.spacing[1] << "x" << info.spacing[2];
+    qDebug() << "Image origin: (" << info.origin[0] << "," << info.origin[1] << "," << info.origin[2] << ")";
+    qDebug() << "Image center: (" << info.center[0] << "," << info.center[1] << "," << info.center[2] << ")";
     qDebug() << "Image scalar range: " << info.minValue << " - " << info.maxValue;
     qDebug() << "Image data type: " << info.dataType;
 
@@ -71,7 +75,7 @@ void SingleViewSliceVisualization::dropEvent(QDropEvent *event)
         QString filePath = url.toLocalFile(); // 获取文件路径
         qDebug() << "Dropped file:" << filePath;
         if (filePath.endsWith(".nii") || filePath.endsWith(".nii.gz")) {
-            qDebug() << "File is a NIfTI file";
+            qDebug() << "This is a NIfTI file";
             this->niftiPathString = filePath.toStdString();
             this->imageLoader.loadNiftiImage(this->niftiPathString);
             this->vtkOriginImage->DeepCopy(imageLoader.getVTKThreeDImage());
@@ -87,6 +91,8 @@ void SingleViewSliceVisualization::dropEvent(QDropEvent *event)
             this->renderer->ResetCamera();
             this->rendererViewer->Render();
             this->openGLView->repaint();
+
+            emit sendOriginalImageToSegmentation(this->vtkOriginImage);
         }
     }
 }
@@ -105,7 +111,6 @@ void SingleViewSliceVisualization::on_viewDirectionComboBox_currentIndexChanged(
 
     // 判断this->vtkOriginImage是否存在图像数据
     if (this->vtkOriginImage->GetScalarType() != -1){
-        std::cout << "this->vtkOriginImage->GetScalarType():" << this->vtkOriginImage->GetScalarType() << std::endl;
         ui->horizontalSlider->setRange(0,this->vtkOriginImageInfo.dimensions[index]-1);
         int middleSlice = this->vtkOriginImageInfo.dimensions[index]/2;
         ui->horizontalSlider->setValue(middleSlice);

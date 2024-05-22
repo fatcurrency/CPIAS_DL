@@ -18,11 +18,20 @@ MainWindow::MainWindow(QWidget *parent) :
     this->sliceView = new SingleViewSliceVisualization(ui->tab_1);
     this->sliceLayout->addWidget(this->sliceView);
     this->sliceLayout->setMargin(0);
+
+    this->segmentationLayout = new QVBoxLayout(ui->tab_2);
+    this->segmentationView = new SegmentationVisualization(ui->tab_2);
+    this->segmentationLayout->addWidget(this->segmentationView);
+    this->segmentationLayout->setMargin(0);
+
+    connect(this->sliceView, &SingleViewSliceVisualization::sendOriginalImageToSegmentation, this->segmentationView, &SegmentationVisualization::setSliceviewVtkOriginImage);
 }
 
 MainWindow::~MainWindow()
 {
     delete this->sliceView;
     delete this->sliceLayout;
+    delete this->segmentationView;
+    delete this->segmentationLayout;
     delete ui;
 }

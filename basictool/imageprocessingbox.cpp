@@ -644,3 +644,71 @@ int ImageProcessing::findIndexIfPresent(const std::vector<double>& container, do
     std::cout << "ERROR!!! The specified value does not exist in the container!" << std::endl;
     return -1;
 }
+
+std::vector<cv::Mat> ImageProcessing::GetSlices(vtkSmartPointer<vtkImageData> image, int axis)
+{
+    //判断image3D是否为空
+    if (image == nullptr) {
+        std::cout << "GetSlices image is nullptr" << std::endl;
+        return std::vector<cv::Mat>();
+    }
+
+    //获取转化后图像的分辨率
+    int *dims = image->GetDimensions();
+    int *extent = image->GetExtent();
+
+    //判断切片顺序
+    int sliceCount;
+    switch (axis) {
+     case 2:
+         sliceCount = dims[2];
+         break;
+     case 1:
+         sliceCount = dims[1];
+         break;
+     case 0:
+         sliceCount = dims[0];
+         break;
+    }
+
+    std::vector<cv::Mat> mats2D;
+    for (int i = 0; i < sliceCount; ++i) {
+    cv::Mat mat2D;
+    switch (axis) {
+        case 2:
+            mat2D = cv::Mat(dims[1], dims[0], CV_32SC1);
+            for (int y = 0; y < dims[1]; ++y) {
+                for (int x = 0; x < dims[0]; ++x) {
+                    unsigned int* pixel = static_cast<unsigned int*>(image->GetScalarPointer(x+extent[0], y+extent[2], i+extent[4]));
+                    mat2D.at<int>(y, x) = *pixel;
+                }
+            }
+            break;
+        case 1:
+            mat2D = cv::Mat(dims[2], dims[0], CV_32SC1);
+            for (int z = 0; z < dims[2]; ++z) {
+                for (int x = 0; x < dims[0]; ++x) {
+                    unsigned int* pixel = static_cast<unsigned int*>(image->GetScalarPointer(x+extent[0], i+extent[2], z+extent[4]));
+                    mat2D.at<int>(z, x) = *pixel;
+                }
+            }
+            break;
+        case 0:
+            mat2D = cv::Mat(dims[2], dims[1], CV_32SC1);
+            for (int z = 0; z < dims[2]; ++z) {
+                for (int y = 0; y < dims[1]; ++y) {
+                    unsigned int* pixel = static_cast<unsigned int*>(image->GetScalarPointer(i+extent[0], y+extent[2], z+extent[4]));
+                    mat2D.at<int>(z, y) = *pixel;
+                }
+            }
+            break;
+        }
+    mats2D.push_back(mat2D);
+    }
+//    // 遍历mats2D，输出每个切片的图像的size
+//    for (int i = 0; i < sliceCount; ++i) {
+//        std::cout << "mats2D[" << i << "].size():" << mats2D[i].size() << std::endl;
+//    }
+
+    return mats2D;
+}

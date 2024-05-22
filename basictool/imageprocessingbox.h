@@ -25,8 +25,9 @@
 #include <vtkDelaunay3D.h>
 #include <vtkDataSetSurfaceFilter.h>
 #include <vtkMassProperties.h>
-
+#include <opencv2/opencv.hpp>
 #include "mydata.h"
+
 
 using PixelType = float; //像素值数据类型
 using ThreeDImageType = itk::Image<PixelType, 3>; //3D图像
@@ -127,6 +128,8 @@ public:
     static std::vector<double> addAndSortIfNotPresent(std::vector<double> container, double value);
     // 判断变量是否存在于容器之中,存在,返回容器中索引值，不存在返回-1
     static int findIndexIfPresent(const std::vector<double>& container, double value);
+
+    static std::vector<cv::Mat> GetSlices(vtkSmartPointer<vtkImageData> image, int axis);
 };
 
 #endif // IMAGEPROCESSINGBOX_H
