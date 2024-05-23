@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->setTabText(0,"2D Slice");
     ui->tabWidget->setTabText(1,"Segmentation");
     ui->tabWidget->setTabText(2,"Volume Render");
+    ui->tabWidget->setTabText(3,"Polarmap");
+
+    ui->tabWidget->setStyleSheet("QTabBar::tab:selected { background: lightblue;}");
 
     this->sliceLayout = new QVBoxLayout(ui->tab_1);
     this->sliceView = new SingleViewSliceVisualization(ui->tab_1);
