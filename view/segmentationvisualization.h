@@ -40,8 +40,9 @@ class SegmentationVisualization : public QWidget
 public:
     explicit SegmentationVisualization(QWidget *parent = 0);
     ~SegmentationVisualization();
-    vtkSmartPointer<vtkActor> addCurveToRenderer(vtkRenderer* curveRenderer, std::vector<std::vector<double>>& pointsData);
+    vtkSmartPointer<vtkActor> addCurveToRenderer(vtkRenderer* curveRenderer, std::vector<std::vector<double>>& pointsData,int colorIndex = 0);
     void drawCurrentSliceContourLine();
+    std::vector<std::vector<std::vector<double>>> extractingContours(vtkSmartPointer<vtkImageData> mask, std::vector<cv::Mat> matVec);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
@@ -72,14 +73,22 @@ private:
     ImageInfo sliceviewVtkOriginImageInfo;
     vtkSmartPointer<vtkImageData> vtkMaskImage;
     ImageInfo vtkMaskImageInfo;
+    std::vector<vtkSmartPointer<vtkImageData>> contourMaskVec; //所有轮廓mask（因为CV轮廓函数只能处理二值图像）
     vtkSmartPointer<vtkImageData> vtkFusionImage;
-
     vtkSmartPointer<vtkEventQtSlotConnect> connections;
-
     std::string niftiPathString;
-    bool vtkMaskImageBinary;
-    std::vector<cv::Mat> maskSliceMat;
-    std::vector<vtkSmartPointer<vtkActor>> curveActorVec;
+
+    std::vector<cv::Mat> myocardialMaskSliceMat;
+    std::vector<vtkSmartPointer<vtkActor>> myocardialCurveActorVec;
+
+    std::vector<cv::Mat> lvVolumeMaskSliceMat;
+    std::vector<vtkSmartPointer<vtkActor>> lvVolumeCurveActorVec;
+
+    std::vector<cv::Mat> rvVolumeMaskSliceMat;
+    std::vector<vtkSmartPointer<vtkActor>> rvVolumeCurveActorVec;
+
+    std::vector<cv::Mat> otherMaskSliceMat;
+    std::vector<vtkSmartPointer<vtkActor>> otherCurveActorVec;
 
 };
 

@@ -398,7 +398,16 @@ void ImageLoading::saveVTKimageToNII(vtkSmartPointer<vtkImageData> vtkImage,std:
 
     VTKToITKFilterType::Pointer vtkToItkFilter = VTKToITKFilterType::New();
 
-    vtkToItkFilter->SetInput(vtkImage);
+    if (vtkImage->GetScalarType() == VTK_UNSIGNED_INT) {
+        // 如果ScalarType为VTK_UNSIGNED_INT，进行特定的处理
+        vtkSmartPointer<vtkImageCast> castFilter = vtkSmartPointer<vtkImageCast>::New();
+        castFilter->SetOutputScalarTypeToFloat();
+        castFilter->SetInputData(vtkImage);
+        castFilter->Update();
+        vtkToItkFilter->SetInput(castFilter->GetOutput());
+    }else {
+        vtkToItkFilter->SetInput(vtkImage);
+    }
     vtkToItkFilter->Update();
 
     ThreeDImageType::Pointer itkImage = vtkToItkFilter->GetOutput();

@@ -740,3 +740,71 @@ vtkSmartPointer<vtkImageData> ImageProcessing::fuseOriginalImageByMask(vtkSmartP
     }
     return result;
 }
+
+vtkSmartPointer<vtkImageData> ImageProcessing::extractBinaryImage(vtkSmartPointer<vtkImageData> image, int value){
+    // 创建一个新的图像，用于存储结果
+    vtkSmartPointer<vtkImageData> result = vtkSmartPointer<vtkImageData>::New();
+    result->DeepCopy(image);
+    bool valueExitence = false;
+    // 获取图像的维度
+    int* dims = image->GetDimensions();
+    // 获取图像和掩码的数据
+    unsigned int* imageData = static_cast<unsigned int*>(result->GetScalarPointer());
+
+    // 遍历图像的所有像素
+    for (int z = 0; z < dims[2]; z++){
+        for (int y = 0; y < dims[1]; y++){
+            for (int x = 0; x < dims[0]; x++){
+                // 获取当前像素的索引
+                int index = x + y * dims[0] + z * dims[0] * dims[1];
+                // 如果掩码的像素值等于value，保留图像的像素值，否则设置为0
+                if (imageData[index] == value){
+                    valueExitence = true;
+                    imageData[index] = 1;
+                }else{
+                    imageData[index] = 0;
+                }
+            }
+        }
+    }
+
+    if(valueExitence == false){
+        return nullptr;
+    }
+    result->Modified();
+    return result;
+}
+
+vtkSmartPointer<vtkImageData> ImageProcessing::extractGreaterBinaryImage(vtkSmartPointer<vtkImageData> image, int value){
+    // 创建一个新的图像，用于存储结果
+    vtkSmartPointer<vtkImageData> result = vtkSmartPointer<vtkImageData>::New();
+    result->DeepCopy(image);
+    bool valueExitence = false;
+    // 获取图像的维度
+    int* dims = image->GetDimensions();
+    // 获取图像和掩码的数据
+    unsigned int* imageData = static_cast<unsigned int*>(result->GetScalarPointer());
+
+    // 遍历图像的所有像素
+    for (int z = 0; z < dims[2]; z++){
+        for (int y = 0; y < dims[1]; y++){
+            for (int x = 0; x < dims[0]; x++){
+                // 获取当前像素的索引
+                int index = x + y * dims[0] + z * dims[0] * dims[1];
+                // 如果掩码的像素值等于value，保留图像的像素值，否则设置为0
+                if (imageData[index] > value){
+                    valueExitence = true;
+                    imageData[index] = 1;
+                }else{
+                    imageData[index] = 0;
+                }
+            }
+        }
+    }
+
+    if(valueExitence == false){
+        return nullptr;
+    }
+    result->Modified();
+    return result;
+}

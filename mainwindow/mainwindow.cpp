@@ -10,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->resize(600,600);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+    // 禁止所有警告
+    vtkObject::GlobalWarningDisplayOff();
+
     ui->tabWidget->setTabText(0,"2D Slice");
     ui->tabWidget->setTabText(1,"Segmentation");
     ui->tabWidget->setTabText(2,"Volume Render");

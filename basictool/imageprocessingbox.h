@@ -25,6 +25,7 @@
 #include <vtkDelaunay3D.h>
 #include <vtkDataSetSurfaceFilter.h>
 #include <vtkMassProperties.h>
+#include <vtkImageCast.h>
 #include <opencv2/opencv.hpp>
 #include "mydata.h"
 
@@ -134,6 +135,11 @@ public:
     // 对image只保留mask中值为value的区域,其它设置为0，返回一个新的image
     static vtkSmartPointer<vtkImageData> fuseOriginalImageByMask(vtkSmartPointer<vtkImageData> image, vtkSmartPointer<vtkImageData> mask, int value);
 
+    // 对image设置值为value的区域的像素值为1,其它设置为0，返回一个新的image
+    static vtkSmartPointer<vtkImageData> extractBinaryImage(vtkSmartPointer<vtkImageData> image, int value);
+
+    // 对image设置大于value值的区域的像素值为1,其它设置为0，返回一个新的image
+    static vtkSmartPointer<vtkImageData> extractGreaterBinaryImage(vtkSmartPointer<vtkImageData> image, int value);
 };
 
 #endif // IMAGEPROCESSINGBOX_H
